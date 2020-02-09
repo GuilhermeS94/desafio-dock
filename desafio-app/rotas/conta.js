@@ -86,9 +86,9 @@ roteador.put("/bloquear", (req, res)=>{
     });
 });
 
-roteador.get("/consultar-extrato/:idconta", (req, res)=>{
+roteador.get("/consultar-extrato/:idconta/:datainicial/:datafinal", (req, res)=>{
     
-    conta.ConsultarExtratoDaConta(req.params.idconta).then(retorno => {
+    conta.ExtratoPorPeriodoDaConta(req.params.idconta, req.params.datainicial, req.params.datafinal).then(retorno => {
         var sucesso = {Efetuado:false};
         
         if(retorno.rowsAffected[0] == 0) return res.status(204).json(sucesso);

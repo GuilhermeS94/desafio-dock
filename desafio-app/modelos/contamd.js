@@ -107,8 +107,23 @@ function ConsultarExtratoDaConta(idConta){
     });
 };
 
-function ExtratoPorPeriodoDaConta(){
+/**
+* Funcao que retorna o extrato da conta
+* @param {number} idConta ID da conta que deseja ver o extrato
+* @param {Date} idConta ID da conta que deseja ver o extrato
+* @param {Date} idConta ID da conta que deseja ver o extrato
+* @return {Promise} Promise com sucesso ou erro da operacao
+*/
+function ExtratoPorPeriodoDaConta(idConta, dataInicial, dataFinal){
+    return sql.connect(conexao).then(pool => {
+        
+        return pool.request()
+            .input("id_conta", sql.Int, idConta)
+            .input("data_inicial", sql.Date, dataInicial)
+            .input("data_final", sql.Date, dataFinal)
+            .query("SELECT Valor, DataExecucao FROM Transacoes WHERE IdConta = @id_conta AND DataExecucao BETWEEN @data_inicial AND @data_final ORDER BY DataExecucao DESC");
     
+    });
 };
 
 module.exports = {

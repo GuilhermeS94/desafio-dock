@@ -34,7 +34,7 @@ O que esperamos como escopo mínimo:
 * Implementar path que recupera o extrato de transações de uma conta;
 
 O que será diferencial:
-* Implementar extrato por período;
+* Implementar extrato por período; ok
 * Elaborar manual de execução;
 * Elaborar documentação;
 * Elaborar testes.
