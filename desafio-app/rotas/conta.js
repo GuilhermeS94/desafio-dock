@@ -57,17 +57,35 @@ roteador.get("/consultar-saldo/:idconta", (req, res)=>{
 roteador.put("/sacar", (req, res)=>{
     var sucesso = {Efetuado:false};
     var valorRealOperacao = (req.body.saque > 0) ? (req.body.saque * -1) : req.body.saque;
+    //1 - salvar transacao da operacao
     transacao.SalvarTransacao(req.body.idconta, valorRealOperacao, req.body.dataExecucao).then(retornoTransacao => {
+        
         if (retornoTransacao.rowsAffected[0] != 1) return res.status(500).json(sucesso);
         
-        conta.SacarDaConta(req.body.idconta, valorRealOperacao).then(retornoSaque => {
+        //2 - pegar valor total sacado no dia
+        conta.ConsultarSaqueTotalPorDiaDaConta(req.body.idconta, req.body.dataExecucao).then(retornoCSTPDC =>{
+            //3 - pegar limite de saque da conta
+            conta.ConsultarLimiteSaqueDiarioDaConta(req.body.idconta).then(retornoCLSDC=>{
+                //4 - Verifica se todos saques do dia, excedem o limite diario
+                var verificador = retornoCLSDC.recordset[0].LimiteSaqueDiario - (retornoCSTPDC.recordset[0].saque_total_dia + (valorRealOperacao * -1));
+                if (verificador < 0) return res.status(500).json({mensagem : "Limite de saque diario excedido."});
+
+                //5 - efetua saque
+                conta.SacarDaConta(req.body.idconta, valorRealOperacao, req.body.dataExecucao).then(retornoSaque => {
             
-            sucesso.Efetuado = retornoSaque.rowsAffected[0] == 1;
-    
-            res.status(200).json(sucesso);
+                    sucesso.Efetuado = retornoSaque.rowsAffected[0] == 1;
+            
+                    res.status(200).json(sucesso);
+                }).catch(err => {
+                    res.status(500).json(err);
+                });
+            }).catch(err => {
+                res.status(500).json(err);
+            });
         }).catch(err => {
             res.status(500).json(err);
         });
+
     }).catch(err => {
         res.status(500).json(err);
     });
@@ -99,13 +117,5 @@ roteador.get("/consultar-extrato/:idconta/:datainicial/:datafinal", (req, res)=>
     });
     
 });
-
-// function ExtratoDeTransacoesDaConta(){
-    
-// };
-
-// function ExtratoPorPeriodoDaConta(){
-    
-// };
 
 module.exports = roteador;

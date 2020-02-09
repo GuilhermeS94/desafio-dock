@@ -26,7 +26,11 @@ function NovaConta(idPessoa, saldo, limiteSaqueDiario, flagAtivo, tipoConta, dat
             .input("conta_ativa", sql.Bit, flagAtivo)
             .input("tipo_conta", sql.Int, tipoConta)
             .input("data_criacao", sql.Date, dataCriacao)
-            .query("INSERT INTO Contas(IdPessoa, Saldo, LimiteSaqueDiario, FlagAtivo, TipoConta, DataCriacao) VALUES (@id_pessoa, @saldo, @limite_saque_diario, @conta_ativa, @tipo_conta, @data_criacao)");
+            .query(
+                `INSERT INTO Contas
+                (IdPessoa, Saldo, LimiteSaqueDiario, FlagAtivo, TipoConta, DataCriacao) VALUES
+                (@id_pessoa, @saldo, @limite_saque_diario, @conta_ativa, @tipo_conta, @data_criacao)`
+            );
     
     });
 };
@@ -42,7 +46,7 @@ function DepositoEmConta(idConta, valorDeposito){
         return pool.request()
             .input("id_conta", sql.Int, idConta)
             .input("valor_deposito", sql.Decimal, valorDeposito)
-            .query("UPDATE Contas SET Saldo = (Saldo + @valor_deposito) WHERE IdConta = @id_conta");
+            .query(`UPDATE Contas SET Saldo = (Saldo + @valor_deposito) WHERE IdConta = @id_conta`);
 
     });
 };
@@ -57,7 +61,41 @@ function ConsultarSaldoDaConta(idConta){
         
         return pool.request()
             .input("id_conta", sql.Int, idConta)
-            .query("SELECT Saldo FROM Contas WHERE IdConta = @id_conta");
+            .query(`SELECT Saldo FROM Contas WHERE IdConta = @id_conta`);
+    
+    });
+};
+
+/**
+* Funcao que retorna o limite de saque diario da conta
+* @param {number} idConta ID da conta que deseja ver o limite de saque diario
+* @return {Promise} Promise com sucesso ou erro da operacao
+*/
+function ConsultarLimiteSaqueDiarioDaConta(idConta){
+    return sql.connect(conexao).then(pool => {
+        
+        return pool.request()
+            .input("id_conta", sql.Int, idConta)
+            .query(`SELECT LimiteSaqueDiario FROM Contas WHERE IdConta = @id_conta`);
+    });
+};
+
+/**
+* Funcao que consulta o valor total de saque do dia
+* @param {number} idConta ID da conta que deseja ver o saldo
+* @return {Promise} Promise com sucesso ou erro da operacao
+*/
+function ConsultarSaqueTotalPorDiaDaConta(idConta, dataExecucao){
+    return sql.connect(conexao).then(pool => {
+        
+        return pool.request()
+            .input("id_conta", sql.Int, idConta)
+            .input("data_execucao", sql.Date, dataExecucao)
+            .query(`SELECT (SUM(Valor)* -1) as saque_total_dia FROM Transacoes 
+                    WHERE IdConta = @id_conta AND
+                        Valor < 0 AND
+                        DataExecucao = @data_execucao`
+            );
     
     });
 };
@@ -68,13 +106,12 @@ function ConsultarSaldoDaConta(idConta){
 * @param {number} valorSaque Valor que deseja sacar (numero negativo)
 * @return {Promise} Promise com sucesso ou erro da operacao
 */
-function SacarDaConta(idConta, valorSaque){
+function SacarDaConta(idConta, valorSaque, dataExecucao){
     return sql.connect(conexao).then(pool => {
         return pool.request()
             .input("id_conta", sql.Int, idConta)
             .input("valor_saque", sql.Decimal, valorSaque)
-            .query("UPDATE Contas SET Saldo = (Saldo + @valor_saque) WHERE IdConta = @id_conta");
-
+            .query(`UPDATE Contas SET Saldo = (Saldo + @valor_saque) WHERE IdConta = @id_conta`);
     });
 };
 
@@ -88,7 +125,7 @@ function BloquearConta(idConta){
         return pool.request()
             .input("id_conta", sql.Int, idConta)
             .input("conta_ativa", sql.Bit, false)
-            .query("UPDATE Contas SET FlagAtivo = @conta_ativa WHERE IdConta = @id_conta");
+            .query(`UPDATE Contas SET FlagAtivo = @conta_ativa WHERE IdConta = @id_conta`);
     });
 };
 
@@ -102,7 +139,7 @@ function ConsultarExtratoDaConta(idConta){
         
         return pool.request()
             .input("id_conta", sql.Int, idConta)
-            .query("SELECT Valor, DataExecucao FROM Transacoes WHERE IdConta = @id_conta");
+            .query(`SELECT Valor, DataExecucao FROM Transacoes WHERE IdConta = @id_conta`);
     
     });
 };
@@ -110,8 +147,8 @@ function ConsultarExtratoDaConta(idConta){
 /**
 * Funcao que retorna o extrato da conta
 * @param {number} idConta ID da conta que deseja ver o extrato
-* @param {Date} idConta ID da conta que deseja ver o extrato
-* @param {Date} idConta ID da conta que deseja ver o extrato
+* @param {Date} dataInicial Data do inicio do intervalo que deseja ver o extrato
+* @param {Date} dataFinal Data do fim do intervalo que deseja ver o extrato
 * @return {Promise} Promise com sucesso ou erro da operacao
 */
 function ExtratoPorPeriodoDaConta(idConta, dataInicial, dataFinal){
@@ -121,8 +158,12 @@ function ExtratoPorPeriodoDaConta(idConta, dataInicial, dataFinal){
             .input("id_conta", sql.Int, idConta)
             .input("data_inicial", sql.Date, dataInicial)
             .input("data_final", sql.Date, dataFinal)
-            .query("SELECT Valor, DataExecucao FROM Transacoes WHERE IdConta = @id_conta AND DataExecucao BETWEEN @data_inicial AND @data_final ORDER BY DataExecucao DESC");
-    
+            .query(
+                `SELECT Valor, DataExecucao FROM Transacoes
+                WHERE IdConta = @id_conta AND
+                    DataExecucao BETWEEN @data_inicial AND @data_final
+                ORDER BY DataExecucao DESC`
+            );
     });
 };
 
@@ -133,5 +174,7 @@ module.exports = {
     SacarDaConta,
     BloquearConta,
     ConsultarExtratoDaConta,
-    ExtratoPorPeriodoDaConta
+    ExtratoPorPeriodoDaConta,
+    ConsultarSaqueTotalPorDiaDaConta,
+    ConsultarLimiteSaqueDiarioDaConta
 };
