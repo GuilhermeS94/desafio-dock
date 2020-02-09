@@ -17,8 +17,8 @@ Conta vinculada a uma pessoa
 create table Contas(
     IdConta INT PRIMARY KEY IDENTITY(1,1),
     IdPessoa INT NOT NULL FOREIGN KEY REFERENCES Pessoas,
-    Saldo DECIMAL(10, 2) NOT NULL,
-    LimiteSqueDiario DECIMAL(10, 2) NOT NULL,
+    Saldo DECIMAL(10, 2) NOT NULL DEFAULT 0,
+    LimiteSaqueDiario DECIMAL(10, 2) NOT NULL,
     FlagAtivo BIT NOT NULL,
     TipoConta INT NOT NULL,
     DataCriacao DATE NOT NULL DEFAULT GETDATE()
@@ -31,7 +31,7 @@ create table Transacoes(
     IdTransacao INT PRIMARY KEY IDENTITY(1,1),
     IdConta INT NOT NULL FOREIGN KEY REFERENCES Contas,
     Valor DECIMAL(10, 2) NOT NULL,
-    [Data] DATE NOT NULL
+    DataExecucao DATE NOT NULL
 );
 
 /*
@@ -46,7 +46,7 @@ INSERT INTO Pessoas(Nome, Cpf, DataNascimento)VALUES
 /*
 Alimentando a tabela de Contas
 */
-INSERT INTO Contas(IdPessoa, Saldo, LimiteSqueDiario, FlagAtivo, TipoConta, DataCriacao) VALUES 
+INSERT INTO Contas(IdPessoa, Saldo, LimiteSaqueDiario, FlagAtivo, TipoConta, DataCriacao) VALUES 
 (1, 3000, 400, 1, 1, GETDATE()),
 (2, 1000000, 2000, 1, 1, GETDATE()),
 (3, 700, 1500, 0, 1, GETDATE()),

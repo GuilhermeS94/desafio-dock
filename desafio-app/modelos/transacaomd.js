@@ -18,7 +18,7 @@ function SalvarTransacao(idConta, valor, dataExecucao){
             .input("id_conta", sql.Int, idConta)
             .input("valor", sql.Decimal, valor)
             .input("data_operacao", sql.Date, dataExecucao)
-            .query("INSERT INTO Transacoes (IdConta, Valor, [Data]) VALUES (@id_conta, @valor, @data_operacao)");
+            .query("INSERT INTO Transacoes (IdConta, Valor, DataExecucao) VALUES (@id_conta, @valor, @data_operacao)");
     });
 };
 

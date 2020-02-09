@@ -5,7 +5,18 @@ var conta = require("../modelos/contamd");
 var transacao = require("../modelos/transacaomd");
 
 roteador.post("/nova-conta", (req, res)=>{
-    conta.NovaConta();
+    var sucesso = {Efetuado:false};
+    conta.NovaConta(req.body.idpessoa, req.body.saldo, req.body.limitesaquediario, req.body.flagativo, req.body.tipoconta, req.body.datacriacao).then(retorno =>{
+        
+        if (retorno.rowsAffected[0] != 1) return res.status(500).json(sucesso);
+        
+        sucesso.Efetuado = true;
+    
+        res.status(200).json(sucesso);
+    })
+    .catch(err => {
+        res.status(500).json(err);
+    });
 });
 
 // function DepositoEmConta(){
@@ -24,7 +35,7 @@ roteador.get("/consultar-saldo/:idconta", (req, res)=>{
         res.status(200).json(saldo);
     }).catch(err => {
         res.status(500).json(err);
-    });;
+    });
     
 });
 
