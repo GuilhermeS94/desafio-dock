@@ -78,6 +78,20 @@ function SacarDaConta(idConta, valorSaque){
     });
 };
 
+/**
+* Funcao bloqueia uma conta
+* @param {number} idConta ID da conta que deseja bloquear
+* @return {Promise} Promise com sucesso ou erro da operacao
+*/
+function BloquearConta(idConta){
+    return sql.connect(conexao).then(pool => {
+        return pool.request()
+            .input("id_conta", sql.Int, idConta)
+            .input("conta_ativa", sql.Bit, false)
+            .query("UPDATE Contas SET FlagAtivo = @conta_ativa WHERE IdConta = @id_conta");
+    });
+};
+
 function ExtratoDeTransacoesDaConta(){
     
 };
@@ -91,6 +105,7 @@ module.exports = {
     DepositoEmConta,
     ConsultarSaldoDaConta,
     SacarDaConta,
+    BloquearConta,
     ExtratoDeTransacoesDaConta,
     ExtratoPorPeriodoDaConta
 };

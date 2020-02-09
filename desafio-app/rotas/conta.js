@@ -73,6 +73,19 @@ roteador.put("/sacar", (req, res)=>{
     });
 });
 
+roteador.put("/bloquear", (req, res)=>{
+    var sucesso = {Efetuado:false};
+    
+    conta.BloquearConta(req.body.idconta).then(retornoBloqueio => {
+        
+        sucesso.Efetuado = retornoBloqueio.rowsAffected[0] == 1;
+
+        res.status(200).json(sucesso);
+    }).catch(err => {
+        res.status(500).json(err);
+    });
+});
+
 // function ExtratoDeTransacoesDaConta(){
     
 // };
