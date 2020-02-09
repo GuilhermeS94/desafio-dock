@@ -2,6 +2,7 @@ var express = require('express');
 var roteador = express.Router();
 
 var conta = require("../modelos/contamd");
+var transacao = require("../modelos/transacaomd");
 
 roteador.post("/nova-conta", (req, res)=>{
     conta.NovaConta();
@@ -28,18 +29,21 @@ roteador.get("/consultar-saldo/:idconta", (req, res)=>{
 });
 
 roteador.put("/sacar", (req, res)=>{
-    
-    conta.SacarDaConta(req.body.idconta, req.body.saque).then(retorno => {
-        var sucesso = {Efetuado:false};
-        console.log(retorno);
+    var sucesso = {Efetuado:false};
+    transacao.SalvarTransacao(req.body.idconta, req.body.saque, req.body.dataExecucao).then(retornoTransacao => {
+        if (retornoTransacao.rowsAffected[0] != 1) return res.status(500).json(sucesso);
         
-        sucesso.Efetuado = retorno.rowsAffected[0] == 1;
-
-        res.status(200).json(sucesso);
+        conta.SacarDaConta(req.body.idconta, req.body.saque).then(retornoSaque => {
+            
+            sucesso.Efetuado = retornoSaque.rowsAffected[0] == 1;
+    
+            res.status(200).json(sucesso);
+        }).catch(err => {
+            res.status(500).json(err);
+        });
     }).catch(err => {
         res.status(500).json(err);
-    });;
-    
+    });
 });
 
 // function SacarDaConta(){

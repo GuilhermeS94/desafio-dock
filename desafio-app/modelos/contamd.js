@@ -1,19 +1,6 @@
 const sql = require('mssql');
-var dotenv = require("dotenv");
-
-dotenv.config();
-
-const config = {
-    user: process.env.USUARIO_DB,
-    password: process.env.SENHA_DB,
-    server: process.env.SERVIDOR_DB, 
-    database: process.env.DB ,
-    options: { //opcoes obrigatorias porque a padrao esta deprecated
-        encrypt: true,
-        enableArithAbort: true
-    }
-};
-
+var conexao = require("./conexaodb");
+var transacao = require("./transacaomd");
 
 sql.on('error', err => {
     console.log(err);
@@ -33,7 +20,7 @@ function DepositoEmConta(){
 * @return {Promise} Promise com sucesso ou erro da operacao
 */
 function ConsultarSaldoDaConta(idConta){
-    return sql.connect(config).then(pool => {
+    return sql.connect(conexao).then(pool => {
         
         return pool.request()
             .input("id_conta", sql.Int, idConta)
@@ -49,13 +36,12 @@ function ConsultarSaldoDaConta(idConta){
 * @return {Promise} Promise com sucesso ou erro da operacao
 */
 function SacarDaConta(idConta, valorSaque){
-    return sql.connect(config).then(pool => {
-        
+    return sql.connect(conexao).then(pool => {
         return pool.request()
             .input("id_conta", sql.Int, idConta)
             .input("valor_saque", sql.Decimal, valorSaque)
             .query("UPDATE Contas SET Saldo = (Saldo - @valor_saque) WHERE IdConta = @id_conta");
-    
+
     });
 };
 
