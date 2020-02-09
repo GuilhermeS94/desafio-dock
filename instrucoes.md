@@ -26,10 +26,10 @@ cpf                 Texto
 dataNascimento      Data
 
 O que esperamos como escopo mínimo:
-* Implementar path que realiza a criação de uma conta; ok
-* Implementar path que realiza operação de depósito em uma conta; ok
-* Implementar path que realiza operação de consulta de saldo em determinada conta; OK
-* Implementar path que realiza operação de saque em uma conta; OK
+* Implementar path que realiza a criação de uma conta;
+* Implementar path que realiza operação de depósito em uma conta;
+* Implementar path que realiza operação de consulta de saldo em determinada conta;
+* Implementar path que realiza operação de saque em uma conta;
 * Implementar path que realiza o bloqueio de uma conta;
 * Implementar path que recupera o extrato de transações de uma conta;
 

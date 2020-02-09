@@ -92,8 +92,19 @@ function BloquearConta(idConta){
     });
 };
 
-function ExtratoDeTransacoesDaConta(){
+/**
+* Funcao que retorna o extrato da conta
+* @param {number} idConta ID da conta que deseja ver o extrato
+* @return {Promise} Promise com sucesso ou erro da operacao
+*/
+function ConsultarExtratoDaConta(idConta){
+    return sql.connect(conexao).then(pool => {
+        
+        return pool.request()
+            .input("id_conta", sql.Int, idConta)
+            .query("SELECT Valor, DataExecucao FROM Transacoes WHERE IdConta = @id_conta");
     
+    });
 };
 
 function ExtratoPorPeriodoDaConta(){
@@ -106,6 +117,6 @@ module.exports = {
     ConsultarSaldoDaConta,
     SacarDaConta,
     BloquearConta,
-    ExtratoDeTransacoesDaConta,
+    ConsultarExtratoDaConta,
     ExtratoPorPeriodoDaConta
 };
