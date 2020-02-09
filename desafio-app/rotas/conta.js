@@ -19,9 +19,24 @@ roteador.post("/nova-conta", (req, res)=>{
     });
 });
 
-// function DepositoEmConta(){
+roteador.put("/depositar", (req, res)=>{
+    var sucesso = {Efetuado:false};
     
-// };
+    transacao.SalvarTransacao(req.body.idconta, req.body.deposito, req.body.dataExecucao).then(retornoTransacao => {
+        if (retornoTransacao.rowsAffected[0] != 1) return res.status(500).json(sucesso);
+        
+        conta.DepositoEmConta(req.body.idconta, req.body.deposito).then(retornoDeposito => {
+            
+            sucesso.Efetuado = retornoDeposito.rowsAffected[0] == 1;
+    
+            res.status(200).json(sucesso);
+        }).catch(err => {
+            res.status(500).json(err);
+        });
+    }).catch(err => {
+        res.status(500).json(err);
+    });
+});
 
 roteador.get("/consultar-saldo/:idconta", (req, res)=>{
     
@@ -41,10 +56,11 @@ roteador.get("/consultar-saldo/:idconta", (req, res)=>{
 
 roteador.put("/sacar", (req, res)=>{
     var sucesso = {Efetuado:false};
-    transacao.SalvarTransacao(req.body.idconta, req.body.saque, req.body.dataExecucao).then(retornoTransacao => {
+    var valorRealOperacao = (req.body.saque > 0) ? (req.body.saque * -1) : req.body.saque;
+    transacao.SalvarTransacao(req.body.idconta, valorRealOperacao, req.body.dataExecucao).then(retornoTransacao => {
         if (retornoTransacao.rowsAffected[0] != 1) return res.status(500).json(sucesso);
         
-        conta.SacarDaConta(req.body.idconta, req.body.saque).then(retornoSaque => {
+        conta.SacarDaConta(req.body.idconta, valorRealOperacao).then(retornoSaque => {
             
             sucesso.Efetuado = retornoSaque.rowsAffected[0] == 1;
     
@@ -56,10 +72,6 @@ roteador.put("/sacar", (req, res)=>{
         res.status(500).json(err);
     });
 });
-
-// function SacarDaConta(){
-    
-// };
 
 // function ExtratoDeTransacoesDaConta(){
     

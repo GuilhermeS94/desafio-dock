@@ -31,8 +31,20 @@ function NovaConta(idPessoa, saldo, limiteSaqueDiario, flagAtivo, tipoConta, dat
     });
 };
 
-function DepositoEmConta(){
-    
+/**
+* Funcao que realiza deposito na conta
+* @param {number} idConta ID da conta que deseja ver o saldo
+* @param {number} valorDeposito Valor que deseja depositar
+* @return {Promise} Promise com sucesso ou erro da operacao
+*/
+function DepositoEmConta(idConta, valorDeposito){
+    return sql.connect(conexao).then(pool => {
+        return pool.request()
+            .input("id_conta", sql.Int, idConta)
+            .input("valor_deposito", sql.Decimal, valorDeposito)
+            .query("UPDATE Contas SET Saldo = (Saldo + @valor_deposito) WHERE IdConta = @id_conta");
+
+    });
 };
 
 /**
@@ -51,9 +63,9 @@ function ConsultarSaldoDaConta(idConta){
 };
 
 /**
-* Funcao que salva transacao e atualiza saldo da conta
+* Funcao atualiza saldo da conta
 * @param {number} idConta ID da conta que deseja ver o saldo
-* @param {number} valorSaque Valor que deseja sacar
+* @param {number} valorSaque Valor que deseja sacar (numero negativo)
 * @return {Promise} Promise com sucesso ou erro da operacao
 */
 function SacarDaConta(idConta, valorSaque){
@@ -61,7 +73,7 @@ function SacarDaConta(idConta, valorSaque){
         return pool.request()
             .input("id_conta", sql.Int, idConta)
             .input("valor_saque", sql.Decimal, valorSaque)
-            .query("UPDATE Contas SET Saldo = (Saldo - @valor_saque) WHERE IdConta = @id_conta");
+            .query("UPDATE Contas SET Saldo = (Saldo + @valor_saque) WHERE IdConta = @id_conta");
 
     });
 };
