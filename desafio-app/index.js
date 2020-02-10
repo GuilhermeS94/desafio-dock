@@ -5,6 +5,11 @@ var dotenv = require("dotenv");
 const conta = require("./rotas/conta");
 const documentacao = require("./rotas/desafio-documentacao");
 
+var Raml = require('create-raml');
+ 
+var app = express();
+var raml = new Raml({ express: app });
+
 //Configuracoes basicas INI
 
 dotenv.config();
@@ -32,3 +37,5 @@ app.use(documentacao);
 app.listen(process.env.PORTA, ()=>{
     console.log(`Server listening on ${process.env.PORTA} port`);
 });
+
+module.exports = app;

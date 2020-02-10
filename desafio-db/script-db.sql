@@ -1,4 +1,5 @@
 create database desafiodockdb;
+use desafiodockdb;
 
 /*
 Primeiro a tabela que nao depende de nenhum
