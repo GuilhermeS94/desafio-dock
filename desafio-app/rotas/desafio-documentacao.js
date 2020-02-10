@@ -1,9 +1,9 @@
 var express = require('express');
 var roteador = express.Router();
-const swaggerInterface = require('swagger-ui-express');
-const swaggerArquivo = require("../documentacao/des-dock-arq.json");
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('../documentacao/des-dock-arq.json');
 
-roteador.use("/docs", swaggerInterface.serve);
-roteador.get("/docs", swaggerInterface.setup(swaggerArquivo));
+roteador.use('/api-docs', swaggerUi.serve);
+roteador.get('/api-docs', swaggerUi.setup(swaggerDocument));
 
 module.exports = roteador;

@@ -1,5 +1,5 @@
 {
-  "swagger": "4.1.3",
+  "swagger": "2.0",
   "info": {
     "version": "1.0.0",
     "title": "Desafio Dock",
@@ -9,7 +9,7 @@
       "url": "https://opensource.org/licenses/ISC"
     }
   },
-  "host": "lhttp://ocalhost:3000",
+  "host": "localhost:3000",
   "basePath": "/",
   "tags": [
     {
@@ -33,42 +33,48 @@
           "name": "idpessoa",
           "required": true,
           "description": "ID da pessoa dona da conta",
+          "in": "path",
           "type": "number"
         },
         {
           "name": "saldo",
           "required": true,
           "description": "Saldo inicial da conta",
+          "in": "path",
           "type": "number"
         },
         {
           "name": "limitesaquediario",
           "required": true,
           "description": "Limite de saque por dia da conta",
+          "in": "path",
           "type": "number"
         },
         {
           "name": "flagativo",
           "required": true,
           "description": "Status se a conta esta ativa ou nao",
+          "in": "path",
           "type": "boolean"
         },
         {
           "name": "tipoconta",
           "required": true,
           "description": "Tipo da conta bancaria",
+          "in": "path",
           "type": "number"
         },
         {
           "name": "datacriacao",
           "required": true,
           "description": "Data em que a conta foi criada",
+          "in": "path",
           "type": "number"
         }
       ],
       "post": {
         "tags": [
-          "NovaConta"
+          "Conta"
         ],
         "summary": "Cria uma conta bancaria nova",
         "responses": {
@@ -87,18 +93,21 @@
           "name": "idconta",
           "required": true,
           "description": "ID da conta bancaria",
+          "in": "path",
           "type": "number"
         },
         {
           "name": "deposito",
           "required": true,
           "description": "Valor do deposito efetuado",
+          "in": "path",
           "type": "number"
         },
         {
           "name": "dataExecucao",
           "required": true,
           "description": "Data da execucao do deposito",
+          "in": "path",
           "type": "number"
         }
       ],
@@ -123,6 +132,7 @@
           "name": "idconta",
           "required": true,
           "description": "ID da conta bancaria",
+          "in": "path",
           "type": "number"
         }
       ],
@@ -147,19 +157,22 @@
           "name": "idconta",
           "required": true,
           "description": "ID da conta bancaria",
+          "in": "path",
           "type": "number"
         },
         {
           "name": "saque",
           "required": true,
           "description": "Valor do daque realizado",
+          "in": "path",
           "type": "number"
         },
         {
           "name": "dataExecucao",
           "required": true,
           "description": "Data da execucao do saque",
-          "type": "date"
+          "in": "path",
+          "type": "string"
         }
       ],
       "put": {
@@ -183,6 +196,7 @@
           "name": "idconta",
           "required": true,
           "description": "ID da conta bancaria",
+          "in": "path",
           "type": "number"
         }
       ],
@@ -207,6 +221,7 @@
           "name": "idconta",
           "required": true,
           "description": "ID da conta bancaria",
+          "in": "path",
           "type": "number"
         }
       ],
@@ -231,19 +246,22 @@
           "name": "idconta",
           "required": true,
           "description": "ID da conta bancaria",
+          "in": "path",
           "type": "number"
         },
         {
           "name": "datainicial",
           "required": true,
           "description": "Data de inicio do periodo",
-          "type": "date"
+          "in": "path",
+          "type": "string"
         },
         {
           "name": "datafinal",
           "required": true,
           "description": "Data do fim do periodo",
-          "type": "date"
+          "in": "path",
+          "type": "string"
         }
       ],
       "get": {
@@ -288,7 +306,7 @@
           "type": "number"
         },
         "datacriacao": {
-          "type": "date"
+          "type": "string"
         }
       }
     }

@@ -26,7 +26,7 @@ app.use((req, res, next)=>{
 
 //Rotas INI
 app.use("/conta", conta);
-app.use("/api", documentacao);
+app.use(documentacao);
 //Rotas FIM
 
 app.listen(process.env.PORTA, ()=>{
