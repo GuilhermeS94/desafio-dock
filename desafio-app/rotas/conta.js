@@ -104,6 +104,20 @@ roteador.put("/bloquear", (req, res)=>{
     });
 });
 
+roteador.get("/consultar-extrato/:idconta", (req, res)=>{
+    
+    conta.ConsultarExtratoDaConta(req.params.idconta).then(retorno => {
+        var sucesso = {Efetuado:false};
+        
+        if(retorno.rowsAffected[0] == 0) return res.status(204).json(sucesso);
+
+        res.status(200).json(retorno.recordset);
+    }).catch(err => {
+        res.status(500).json(err);
+    });
+    
+});
+
 roteador.get("/consultar-extrato/:idconta/:datainicial/:datafinal", (req, res)=>{
     
     conta.ExtratoPorPeriodoDaConta(req.params.idconta, req.params.datainicial, req.params.datafinal).then(retorno => {

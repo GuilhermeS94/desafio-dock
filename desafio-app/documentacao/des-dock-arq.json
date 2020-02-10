@@ -1,0 +1,296 @@
+{
+  "swagger": "4.1.3",
+  "info": {
+    "version": "1.0.0",
+    "title": "Desafio Dock",
+    "description": "Desafio de nivelamento de conhecimentos da empresa Dock.",
+    "license": {
+      "name": "ISC",
+      "url": "https://opensource.org/licenses/ISC"
+    }
+  },
+  "host": "lhttp://ocalhost:3000",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Conta",
+      "description": "Api de operacoes com contas bancarias"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/conta/nova-conta": {
+      "parameters": [
+        {
+          "name": "idpessoa",
+          "required": true,
+          "description": "ID da pessoa dona da conta",
+          "type": "number"
+        },
+        {
+          "name": "saldo",
+          "required": true,
+          "description": "Saldo inicial da conta",
+          "type": "number"
+        },
+        {
+          "name": "limitesaquediario",
+          "required": true,
+          "description": "Limite de saque por dia da conta",
+          "type": "number"
+        },
+        {
+          "name": "flagativo",
+          "required": true,
+          "description": "Status se a conta esta ativa ou nao",
+          "type": "boolean"
+        },
+        {
+          "name": "tipoconta",
+          "required": true,
+          "description": "Tipo da conta bancaria",
+          "type": "number"
+        },
+        {
+          "name": "datacriacao",
+          "required": true,
+          "description": "Data em que a conta foi criada",
+          "type": "number"
+        }
+      ],
+      "post": {
+        "tags": [
+          "NovaConta"
+        ],
+        "summary": "Cria uma conta bancaria nova",
+        "responses": {
+          "200": {
+            "description": "Conta criada",
+            "schema": {
+              "$ref": "#/definitions/Conta"
+            }
+          }
+        }
+      }
+    },
+    "/conta/depositar": {
+      "parameters": [
+        {
+          "name": "idconta",
+          "required": true,
+          "description": "ID da conta bancaria",
+          "type": "number"
+        },
+        {
+          "name": "deposito",
+          "required": true,
+          "description": "Valor do deposito efetuado",
+          "type": "number"
+        },
+        {
+          "name": "dataExecucao",
+          "required": true,
+          "description": "Data da execucao do deposito",
+          "type": "number"
+        }
+      ],
+      "put": {
+        "tags": [
+          "Conta"
+        ],
+        "summary": "Realizacao de deposito de uma conta bancaria",
+        "responses": {
+          "200": {
+            "description": "Deposito realizado",
+            "schema": {
+              "$ref": "#/definitions/Conta"
+            }
+          }
+        }
+      }
+    },
+    "/conta/consultar-saldo/{idconta}": {
+      "parameters": [
+        {
+          "name": "idconta",
+          "required": true,
+          "description": "ID da conta bancaria",
+          "type": "number"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Conta"
+        ],
+        "summary": "Consulta de saldo da conta bancaria",
+        "responses": {
+          "200": {
+            "description": "Saldo consultado",
+            "schema": {
+              "$ref": "#/definitions/Conta"
+            }
+          }
+        }
+      }
+    },
+    "/conta/sacar": {
+      "parameters": [
+        {
+          "name": "idconta",
+          "required": true,
+          "description": "ID da conta bancaria",
+          "type": "number"
+        },
+        {
+          "name": "saque",
+          "required": true,
+          "description": "Valor do daque realizado",
+          "type": "number"
+        },
+        {
+          "name": "dataExecucao",
+          "required": true,
+          "description": "Data da execucao do saque",
+          "type": "date"
+        }
+      ],
+      "put": {
+        "tags": [
+          "Conta"
+        ],
+        "summary": "Realizacao de saque na conta bancaria",
+        "responses": {
+          "200": {
+            "description": "Saque realizado",
+            "schema": {
+              "$ref": "#/definitions/Conta"
+            }
+          }
+        }
+      }
+    },
+    "/conta/bloquear": {
+      "parameters": [
+        {
+          "name": "idconta",
+          "required": true,
+          "description": "ID da conta bancaria",
+          "type": "number"
+        }
+      ],
+      "put": {
+        "tags": [
+          "Conta"
+        ],
+        "summary": "Bloquear uma conta bancaria",
+        "responses": {
+          "200": {
+            "description": "Conta bloqueada",
+            "schema": {
+              "$ref": "#/definitions/Conta"
+            }
+          }
+        }
+      }
+    },
+    "/conta/consultar-extrato/{idconta}": {
+      "parameters": [
+        {
+          "name": "idconta",
+          "required": true,
+          "description": "ID da conta bancaria",
+          "type": "number"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Conta"
+        ],
+        "summary": "Consulta de extrato da conta bancaria",
+        "responses": {
+          "200": {
+            "description": "Extrato consultado",
+            "schema": {
+              "$ref": "#/definitions/Conta"
+            }
+          }
+        }
+      }
+    },
+    "/conta/consultar-extrato/{idconta}/{datainicial}/{datafinal}": {
+      "parameters": [
+        {
+          "name": "idconta",
+          "required": true,
+          "description": "ID da conta bancaria",
+          "type": "number"
+        },
+        {
+          "name": "datainicial",
+          "required": true,
+          "description": "Data de inicio do periodo",
+          "type": "date"
+        },
+        {
+          "name": "datafinal",
+          "required": true,
+          "description": "Data do fim do periodo",
+          "type": "date"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Conta"
+        ],
+        "summary": "Consulta de extrato da conta bancaria em um determinado periodo",
+        "responses": {
+          "200": {
+            "description": "Extrato consultado",
+            "schema": {
+              "$ref": "#/definitions/Conta"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Conta": {
+      "required": [
+        "idConta"
+      ],
+      "properties": {
+        "idconta": {
+          "type": "number",
+          "uniqueItems": true
+        },
+        "idpessoa": {
+          "type": "number"
+        },
+        "saldo": {
+          "type": "number"
+        },
+        "limitesaquediario": {
+          "type": "number"
+        },
+        "flagativo": {
+          "type": "boolean"
+        },
+        "tipoconta": {
+          "type": "number"
+        },
+        "datacriacao": {
+          "type": "date"
+        }
+      }
+    }
+  }
+}

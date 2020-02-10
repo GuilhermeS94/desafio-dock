@@ -1,7 +1,6 @@
 Pré-requisitos:
 
 * Desenvolver os recursos em API Rest que realizam operações bancárias com a entidade conta a seguir:
-
 Contas              Tipo
 idConta             Numérico
 idPessoa	          Numérico
@@ -34,7 +33,7 @@ O que esperamos como escopo mínimo:
 * Implementar path que recupera o extrato de transações de uma conta;
 
 O que será diferencial:
-* Implementar extrato por período; ok
+* Implementar extrato por período;
 * Elaborar manual de execução;
 * Elaborar documentação;
 * Elaborar testes.

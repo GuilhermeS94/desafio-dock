@@ -139,7 +139,9 @@ function ConsultarExtratoDaConta(idConta){
         
         return pool.request()
             .input("id_conta", sql.Int, idConta)
-            .query(`SELECT Valor, DataExecucao FROM Transacoes WHERE IdConta = @id_conta`);
+            .query(`SELECT Valor, DataExecucao FROM Transacoes
+                    WHERE IdConta = @id_conta
+                    ORDER BY DataExecucao DESC`);
     
     });
 };

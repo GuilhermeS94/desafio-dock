@@ -3,6 +3,7 @@ var bp = require("body-parser");
 var dotenv = require("dotenv");
 
 const conta = require("./rotas/conta");
+const documentacao = require("./rotas/desafio-documentacao");
 
 //Configuracoes basicas INI
 
@@ -25,6 +26,7 @@ app.use((req, res, next)=>{
 
 //Rotas INI
 app.use("/conta", conta);
+app.use("/api", documentacao);
 //Rotas FIM
 
 app.listen(process.env.PORTA, ()=>{
